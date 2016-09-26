@@ -165,7 +165,7 @@ class CINgs1128 extends CINcode128 {
 
         $this->setStrictMode(true);
         $this->setTilde(true);
-        $this->setAllowsUnknownIdentifier(false);
+        $this->setAllowsUnknownIdentifier(true);
         $this->setNoLengthLimit(false);
     }
 
