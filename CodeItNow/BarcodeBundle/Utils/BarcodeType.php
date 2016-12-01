@@ -35,6 +35,10 @@ class BarcodeType {
      */
     const Gs1128 = "CINgs1128";
     /**
+     * GS1-128 Non-formatted (EAN-128)
+     */
+    const Gs1128Free = "CINgs1128free";
+    /**
      * GS1-128 (EAN-128)
      */
     const Ean128 = "CINgs1128";

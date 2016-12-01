@@ -165,7 +165,7 @@ class CINgs1128 extends CINcode128 {
 
         $this->setStrictMode(true);
         $this->setTilde(true);
-        $this->setAllowsUnknownIdentifier(true);
+        $this->setAllowsUnknownIdentifier(false);
         $this->setNoLengthLimit(false);
     }
 
@@ -241,6 +241,62 @@ class CINgs1128 extends CINcode128 {
      */
     public function parse($text) {
         parent::parse($this->parseGs1128($text));
+    }
+
+    /**
+     * Finds ID with formated content.
+     *
+     * @param string $id
+     * @param bool $yAlreadySet
+     * @param string $realNameId
+     * @return mixed
+     */
+    protected function findIdFormated($id, &$yAlreadySet, &$realNameId) {
+        $pos = strpos($id, ')');
+        if ($pos === false) {
+            throw new CINParseException('gs1128', 'Identifiers must have no more than 4 characters.');
+        } else {
+            if ($pos < 3) {
+                throw new CINParseException('gs1128', 'Identifiers must have at least 2 characters.');
+            }
+
+            $id = substr($id, 1, $pos - 1);
+            if ($this->idExists($id, $yAlreadySet, $realNameId)) {
+                return $id;
+            }
+
+            if ($this->allowsUnknownIdentifier === false) {
+                throw new CINParseException('gs1128', 'The identifier ' . $id . ' doesn\'t exist.');
+            }
+
+            return false;
+        }
+    }
+
+    /**
+     * Finds ID with non-formated content.
+     *
+     * @param string $id
+     * @param bool $yAlreadySet
+     * @param string $realNameId
+     * @return mixed
+     */
+    protected function findIdNotFormated($id, &$yAlreadySet, &$realNameId) {
+        $tofind = $id;
+
+        while (strlen($tofind) >= 2) {
+            if ($this->idExists($tofind, $yAlreadySet, $realNameId)) {
+                return $tofind;
+            } else {
+                $tofind = substr($tofind, 0, -1);
+            }
+        }
+
+        if ($this->allowsUnknownIdentifier === false) {
+            throw new CINParseException('gs1128', 'Error in formatting, can\'t find an identifier.');
+        }
+
+        return false;
     }
 
     /**
@@ -462,62 +518,6 @@ class CINgs1128 extends CINcode128 {
             $yAlreadySet = true;
             $realNameId = $idVarAdded;
             return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Finds ID with formated content.
-     *
-     * @param string $id
-     * @param bool $yAlreadySet
-     * @param string $realNameId
-     * @return mixed
-     */
-    private function findIdFormated($id, &$yAlreadySet, &$realNameId) {
-        $pos = strpos($id, ')');
-        if ($pos === false) {
-            throw new CINParseException('gs1128', 'Identifiers must have no more than 4 characters.');
-        } else {
-            if ($pos < 3) {
-                throw new CINParseException('gs1128', 'Identifiers must have at least 2 characters.');
-            }
-
-            $id = substr($id, 1, $pos - 1);
-            if ($this->idExists($id, $yAlreadySet, $realNameId)) {
-                return $id;
-            }
-
-            if ($this->allowsUnknownIdentifier === false) {
-                throw new CINParseException('gs1128', 'The identifier ' . $id . ' doesn\'t exist.');
-            }
-
-            return false;
-        }
-    }
-
-    /**
-     * Finds ID with non-formated content.
-     *
-     * @param string $id
-     * @param bool $yAlreadySet
-     * @param string $realNameId
-     * @return mixed
-     */
-    private function findIdNotFormated($id, &$yAlreadySet, &$realNameId) {
-        $tofind = $id;
-
-        while (strlen($tofind) >= 2) {
-            if ($this->idExists($tofind, $yAlreadySet, $realNameId)) {
-                return $tofind;
-            } else {
-                $tofind = substr($tofind, 0, -1);
-            }
-        }
-
-        if ($this->allowsUnknownIdentifier === false) {
-            throw new CINParseException('gs1128', 'Error in formatting, can\'t find an identifier.');
         }
 
         return false;
