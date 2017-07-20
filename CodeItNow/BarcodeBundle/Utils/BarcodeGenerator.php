@@ -2,7 +2,7 @@
 /**
  * BarcodeGenerator
  * @author  Akhtar Khan <er.akhtarkhan@gmail.com>
- * @link http://www.codeitnow.in 
+ * @link http://www.codeitnow.in
  */
 namespace CodeItNow\BarcodeBundle\Utils;
 use CodeItNow\BarcodeBundle\Utils\BarcodeType;
@@ -11,27 +11,27 @@ use CodeItNow\BarcodeBundle\Generator\CINDrawing;
 use CodeItNow\BarcodeBundle\Generator\CINFontFile;
 
 class BarcodeGenerator extends BarcodeType {
-    
+
     /**
      * Resolution
      */
     private $scale;
-    
+
     /**
      * Thikness
      */
     private $thickness;
-    
+
     /**
      * Text and barcode color
      */
     private $foregroundColor = '#000000';
-    
+
     /**
      * Background color
      */
     private $backgroundColor = '#FFFFFF';
-    
+
     /**
      * Font path for barcode
      */
@@ -46,22 +46,27 @@ class BarcodeGenerator extends BarcodeType {
      * Barcode type such as code128, code39 etc.
      */
     private $barcodeType;
-    
+
     /**
      * Barcode format such as png, jpeg, gif or wbmp
      */
     private $format;
-    
+
+    /**
+     * Limit the barCodeLength or not, default true
+     */
+    private $noLengthLimit = true;
+
     /**
      * Text to generate barcode
      */
     private $text;
-    
+
     /**
      * Filename to save barcode
      */
     private $filename = '';
-    
+
     /**
      * Barcode types are allowed to generate
      */
@@ -81,7 +86,7 @@ class BarcodeGenerator extends BarcodeType {
     public function setScale($scale){
         $this->scale = $scale;
     }
-    
+
     /**
      * Set Thickness or Height
      * @param int $thickness
@@ -89,7 +94,7 @@ class BarcodeGenerator extends BarcodeType {
     public function setThickness($thickness){
         $this->thickness = $thickness;
     }
-    
+
     /**
      * Set Text or barcode color
      * @param string $foregroundColor
@@ -97,7 +102,7 @@ class BarcodeGenerator extends BarcodeType {
     public function setForegroundColor($foregroundColor){
         $this->foregroundColor = $foregroundColor;
     }
-    
+
     /**
      * Set background color
      * @param string $backgroundColor
@@ -105,7 +110,7 @@ class BarcodeGenerator extends BarcodeType {
     public function setBackgroundColor($backgroundColor){
         $this->backgroundColor = $backgroundColor;
     }
-    
+
     /**
      * Set font path to use in barcode text
      * @param string $font
@@ -113,7 +118,7 @@ class BarcodeGenerator extends BarcodeType {
     public function setFont($font){
         $this->font = $font;
     }
-    
+
     /**
      * Set Barcode type such as code128
      * @param string $type
@@ -121,7 +126,7 @@ class BarcodeGenerator extends BarcodeType {
     public function setType($type){
         $this->barcodeType = $type;
     }
-    
+
     /**
      * Set barcode format such as png, gif, jpeg
      * @param string $format
@@ -129,7 +134,7 @@ class BarcodeGenerator extends BarcodeType {
     public function setFormat($format){
         $this->format = $format;
     }
-    
+
     /**
      * Set text to generate barcode
      * @param string $text
@@ -137,13 +142,21 @@ class BarcodeGenerator extends BarcodeType {
     public function setText($text){
         $this->text = $text;
     }
-    
+
     /**
      * Set filename with path to save barcode
      * @param string $filename
      */
     public function setFilename($filename){
         $this->filename = $filename;
+    }
+
+    /**
+     * Set if must limit the barcodeLength or not
+     * @param bool $noLengthLimit
+     */
+    public function setNoLengthLimit($noLengthLimit){
+        $this->noLengthLimit = $noLengthLimit;
     }
 
     /**
@@ -181,14 +194,14 @@ class BarcodeGenerator extends BarcodeType {
         if(isset($format)){
             $this->format = $format;
         }
-        
+
         if(isset($fontPath)){
             $this->font = $fontPath;
         }
-        
+
         return $this->_render();
     }
-    
+
     /**
      * Get barcode object to create image
      * @return object   Barcode object
@@ -216,14 +229,16 @@ class BarcodeGenerator extends BarcodeType {
             }
             $code->setForegroundColor($textColor); // Color of bars
             $code->setBackgroundColor($backgroudColor); // Color of spaces
+
+            $code->setNoLengthLimit($this->noLengthLimit);
             $code->setFont($font); // Font (or 0)
             $code->parse($text); // Text
         //} catch (\Exception $ex) {
-            
+
         //}
         return $code;
     }
-    
+
     /**
      * Render barcode as base64 encoded
      * @return string   Base64Encoded image
@@ -231,18 +246,18 @@ class BarcodeGenerator extends BarcodeType {
     private function _render(){
         $textColor = new CINColor($this->foregroundColor);
         $backgroudColor = new CINColor($this->backgroundColor);
-        
+
         /* Here is the list of the arguments
         1 - Filename (empty : display on screen)
         2 - Background color */
         $drawing = new CINDrawing($this->filename, $backgroudColor);
-        
+
         $drawException = null;
-        
+
         if(isset($this->format) and !in_array(strtoupper($this->format), $this->allowedFormats)){
             $drawException = $this->format .' format is not allowed.';
         }
-        
+
         if(!isset($this->barcodeType)){
             $drawException = 'Unable to generate barcode for unknown type';
         }else{
@@ -268,7 +283,7 @@ class BarcodeGenerator extends BarcodeType {
         $barcodeImg = base64_encode($barcodeImg);
         return $barcodeImg;
     }
-    
+
     /**
      * Barcode image format
      * @return string
@@ -294,7 +309,7 @@ class BarcodeGenerator extends BarcodeType {
         }
         return $format;
     }
-    
+
     /**
      * Get default font for barcode if not provided by user
      * @global object $kernel
@@ -304,5 +319,5 @@ class BarcodeGenerator extends BarcodeType {
         $fontPath = dirname(__DIR__)."/Resources/font/Arial.ttf";
         return $fontPath;
     }
-    
+
 }
