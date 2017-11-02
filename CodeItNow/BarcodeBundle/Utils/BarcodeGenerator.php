@@ -229,8 +229,9 @@ class BarcodeGenerator extends BarcodeType {
             }
             $code->setForegroundColor($textColor); // Color of bars
             $code->setBackgroundColor($backgroudColor); // Color of spaces
-
-            $code->setNoLengthLimit($this->noLengthLimit);
+            if(method_exists($code, "setNoLengthLimit")){
+                $code->setNoLengthLimit($this->noLengthLimit);
+            }
             $code->setFont($font); // Font (or 0)
             $code->parse($text); // Text
         //} catch (\Exception $ex) {
