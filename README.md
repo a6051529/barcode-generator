@@ -82,6 +82,13 @@ $barcode->setType(BarcodeGenerator::Ean128);
 $barcode->setText("00123456789012345675");
 $barcode->setType(BarcodeGenerator::Gs1128);
 ```
+### Example - Gs1128 (with no length limit and unknown identifier):
+```php
+$barcode->setText("4157707266014651802001012603068039000000006377069620171215");
+$barcode->setType(BarcodeGenerator::Gs1128);
+$barcode->setNoLengthLimit(true);
+$barcode->setAllowsUnknownIdentifier(true);
+```
 
 ### Example - I25:
 ```php
