@@ -7,6 +7,9 @@
  * TODO I25 and S25 -> 1/3 or 1/2 for the big bar
  *
  *--------------------------------------------------------------------
+ * @author  Akhtar Khan <er.akhtarkhan@gmail.com>
+ * @link http://www.codeitnow.in
+ * @package https://github.com/codeitnowin/barcode-generator  
  */
 namespace CodeItNow\BarcodeBundle\Generator;
 use CodeItNow\BarcodeBundle\Generator\CINParseException;

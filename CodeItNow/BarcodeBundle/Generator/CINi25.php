@@ -5,6 +5,9 @@
  * Sub-Class - Interleaved 2 of 5
  *
  *--------------------------------------------------------------------
+ * @author  Akhtar Khan <er.akhtarkhan@gmail.com>
+ * @link http://www.codeitnow.in
+ * @package https://github.com/codeitnowin/barcode-generator  
  */
 namespace CodeItNow\BarcodeBundle\Generator;
 use CodeItNow\BarcodeBundle\Generator\CINParseException;
