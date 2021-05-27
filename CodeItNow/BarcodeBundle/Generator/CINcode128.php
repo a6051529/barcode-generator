@@ -12,6 +12,9 @@
  * some garbage since some characters are not displayable.
  *
  *--------------------------------------------------------------------
+ * @author  Akhtar Khan <er.akhtarkhan@gmail.com>
+ * @link http://www.codeitnow.in
+ * @package https://github.com/codeitnowin/barcode-generator  
  */
 namespace CodeItNow\BarcodeBundle\Generator;
 use CodeItNow\BarcodeBundle\Generator\CINParseException;
@@ -57,6 +60,8 @@ class CINcode128 extends CINBarcode1D {
     private $fnc;
 
     private $METHOD            = null; // Array of method available to create Code128 (CODE128_A, CODE128_B, CODE128_C)
+
+    private $noLengthLimit;
 
     /**
      * Constructor.
@@ -208,6 +213,8 @@ class CINcode128 extends CINBarcode1D {
 
         // Method available
         $this->METHOD        = array(CODE128_A => 'A', CODE128_B => 'B', CODE128_C => 'C');
+
+        $this->setNoLengthLimit(false);
     }
 
     /**
@@ -880,5 +887,26 @@ class CINcode128 extends CINBarcode1D {
         $this->data[] = $this->code[$this->checksumValue];
         $this->data[] = $this->code[self::KEY_STOP];
     }
+
+
+    /**
+     * Removes the limit of 48 characters.
+     *
+     * @param bool $noLengthLimit
+     */
+    public function setNoLengthLimit($noLengthLimit) {
+        $this->noLengthLimit = (bool)$noLengthLimit;
+    }
+
+    /**
+     * Gets if the limit of 48 characters is removed.
+     *
+     * @return bool
+     */
+    public function getNoLengthLimit() {
+        return $this->noLengthLimit;
+    }
+
+
 }
 ?>
