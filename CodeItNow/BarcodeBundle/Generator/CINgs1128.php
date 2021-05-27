@@ -5,7 +5,9 @@
  * Calculate the GS1-128 based on the Code-128 encoding.
  *
  *--------------------------------------------------------------------
- * 
+ * @author  Akhtar Khan <er.akhtarkhan@gmail.com>
+ * @link http://www.codeitnow.in
+ * @package https://github.com/codeitnowin/barcode-generator   
  */
 namespace CodeItNow\BarcodeBundle\Generator;
 use CodeItNow\BarcodeBundle\Generator\CINParseException;
@@ -31,7 +33,8 @@ class CINgs1128 extends CINcode128 {
     private $identifiersId = array();
     private $identifiersContent = array();
     private $identifiersAi = array();
-
+    private $customLabelText=false;
+    
     /**
      * Constructors
      *
@@ -234,13 +237,21 @@ class CINgs1128 extends CINcode128 {
         return $this->noLengthLimit;
     }
 
+    public function setLabel($label){
+        $this->customLabelText = $label;
+    }
+
     /**
      * Parses Text.
      *
      * @param string $text
      */
     public function parse($text) {
-        parent::parse($this->parseGs1128($text));
+        $parsedText = $this->parseGs1128($text);
+        if($this->customLabelText!==false and CINBarcode1D::AUTO_LABEL!=$this->customLabelText){
+            parent::setLabel($this->customLabelText);    
+        }
+        parent::parse($parsedText);
     }
 
     /**

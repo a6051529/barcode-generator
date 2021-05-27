@@ -2,7 +2,8 @@
 /**
  * BarcodeGenerator
  * @author  Akhtar Khan <er.akhtarkhan@gmail.com>
- * @link http://www.codeitnow.in 
+ * @link http://www.codeitnow.in
+ * @package https://github.com/codeitnowin/barcode-generator  
  */
 namespace CodeItNow\BarcodeBundle\Utils;
 use CodeItNow\BarcodeBundle\Utils\BarcodeType;
@@ -73,6 +74,17 @@ class BarcodeGenerator extends BarcodeType {
      * Clear labels flag
      */
     private $label = FALSE;
+    
+    /**
+     *  No length limit for GS1-128
+     * @var bool
+     */
+    private $noLengthLimit = false;
+    
+    /*
+     * Allow unknow identifier GS1-128
+     */
+    private $allowsUnknownIdentifier = false;
 
     /**
      * Set Resolution
@@ -162,6 +174,46 @@ class BarcodeGenerator extends BarcodeType {
     {
         $this->label = $label;
     }
+    
+    /**
+     * GS1-128
+     * Removes the limit of 48 characters.
+     *
+     * @param bool $noLengthLimit
+     */
+    public function setNoLengthLimit($noLengthLimit) {
+        $this->noLengthLimit = (bool)$noLengthLimit;
+    }
+
+    /**
+     * GS1-128
+     * Gets if the limit of 48 characters is removed.
+     *
+     * @return bool
+     */
+    public function getNoLengthLimit() {
+        return $this->noLengthLimit;
+    }
+    
+    /**
+     * GS1-128
+     * Allows unknown identifiers.
+     *
+     * @param bool $allow
+     */
+    public function setAllowsUnknownIdentifier($allow) {
+        $this->allowsUnknownIdentifier = (bool)$allow;
+    }
+
+    /**
+     * GS1-128
+     * Gets if unkmown identifiers are allowed.
+     *
+     * @return bool
+     */
+    public function getAllowsUnknownIdentifier() {
+        return $this->allowsUnknownIdentifier;
+    }
 
     /**
      * Generate barcode
@@ -213,6 +265,12 @@ class BarcodeGenerator extends BarcodeType {
             }
             if($this->label !== FALSE){
                 $code->setLabel($this->label);
+            }
+            if($this->noLengthLimit){
+                $code->setNoLengthLimit($this->noLengthLimit);
+            }
+            if($this->allowsUnknownIdentifier){
+                $code->setAllowsUnknownIdentifier($this->allowsUnknownIdentifier);
             }
             $code->setForegroundColor($textColor); // Color of bars
             $code->setBackgroundColor($backgroudColor); // Color of spaces
